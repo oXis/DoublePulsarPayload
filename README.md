@@ -79,6 +79,10 @@ DLL to include.
 ## RunShellcode
 Code to test the shellcode. It just loads it and jump to it. This code depends on all of the previous projects, so if you compile first, Visual Studio will compile all required projects and also run `ExtractShellcode.exe` for you.
 
+# Credit
+Stephen Fewer for the Reflective DLL loader technique. Many others on that posted code on Github.
+And of course, The Shadow Brokers and the National Security Agency ;).
+
 # Licence
 DoublePulsarePayload is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License as
@@ -91,6 +95,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with DoublePulsarePayload; see the file COPYING.
+along with DoublePulsarePayload; see the file LICENCE.
 If not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
