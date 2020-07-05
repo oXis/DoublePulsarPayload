@@ -82,7 +82,7 @@ DLL to include.
 Code to test the shellcode. It just loads it and jump to it. This code depends on all of the previous projects, so if you compile first, Visual Studio will compile all required projects and also run `ExtractShellcode.exe` for you.
 
 # Credit
-Stephen Fewer for the Reflective DLL loader technique. Many others that posted code on Github.
+Stephen Fewer for the Reflective DLL loader technique. Markus F.X.J. Oberhumer for LZO and many others that posted code on Github.
 And of course, The Shadow Brokers and the National Security Agency ;).
 
 # Licence
