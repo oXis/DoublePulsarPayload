@@ -71,8 +71,10 @@ to the correct location.
 
 Got to [www.oberhumer.com/opensource/lzo/download](https://www.oberhumer.com/opensource/lzo/download/) or click [LZO 2.06 download](https://www.oberhumer.com/opensource/lzo/download/lzo-2.06.tar.gz)
 
-Run this command to extract the shellcode. `shellcode.bin` contains raw shellcode bytes.
+Run this command to extract the shellcode.    
 `.\ExtractShellcode.exe ..\..\DoublePulsarShellcode\map.txt ..\..\RunShellcode\shellcode.h`
+
+`shellcode.bin` contains raw shellcode bytes.
 
 ## Helper
 Contains headers for the shellcode and also print hash of WinAPI functions
