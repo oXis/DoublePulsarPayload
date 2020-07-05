@@ -69,6 +69,8 @@ ExtractShellcode requires `lzo.lib`, so grab a copy of LZO and compile it. Then 
 `#include "../../lzo-2.06/include/lzo/lzo1z.h"` and `#pragma comment(lib, "../Release/lzo-2.06.lib")`
 to the correct location.
 
+Got to [www.oberhumer.com/opensource/lzo/download](https://www.oberhumer.com/opensource/lzo/download/) or click [LZO 2.06 download](https://www.oberhumer.com/opensource/lzo/download/lzo-2.06.tar.gz)
+
 Run this command to extract the shellcode. `shellcode.bin` contains raw shellcode bytes.
 `.\ExtractShellcode.exe ..\..\DoublePulsarShellcode\map.txt ..\..\RunShellcode\shellcode.h`
 
