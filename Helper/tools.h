@@ -16,22 +16,22 @@ __inline DWORD getHash(const char* str);
 
 __inline void* mmemcpy(void* dst, const void* src, int size)
 {
-	if (dst && src && size > 0)
-	{
-		byte* to = (byte*)dst;
-		byte* from = (byte*)src;
-		while (size--) *to++ = *from++;
-	}
-	return dst;
+    if (dst && src && size > 0)
+    {
+        byte* to = (byte*)dst;
+        byte* from = (byte*)src;
+        while (size--) *to++ = *from++;
+    }
+    return dst;
 }
 
 __inline void* mmemset(void* ptr, int c, int count)
 {
-	if (ptr && count > 0)
-	{
-		volatile byte* p = (byte*)ptr;
-		for (int i = 0; i < count; i++, p++)
-			*p = c;
-	}
-	return ptr;
+    if (ptr && count > 0)
+    {
+        volatile byte* p = (byte*)ptr;
+        for (int i = 0; i < count; i++, p++)
+            *p = c;
+    }
+    return ptr;
 }

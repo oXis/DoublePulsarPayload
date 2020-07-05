@@ -49,24 +49,24 @@ typedef DWORD (WINAPI* typeWaitForSingleObject)(HANDLE hHandle, DWORD  dwMillise
 
 inline BOOL IsOrdinal(UINT_PTR pvTest)
 {
-	CONST UINT_PTR MASK = ~(UINT_PTR(0xFFFF));
-	return (pvTest & MASK) == 0 ? TRUE : FALSE;
+    CONST UINT_PTR MASK = ~(UINT_PTR(0xFFFF));
+    return (pvTest & MASK) == 0 ? TRUE : FALSE;
 }
 
 inline PPEB GetPEB()
 {
-	return NtCurrentTeb()->ProcessEnvironmentBlock;
+    return NtCurrentTeb()->ProcessEnvironmentBlock;
 }
 
 inline PIMAGE_NT_HEADERS GetNTHeaders(HMODULE imageBase)
 {
-	PIMAGE_DOS_HEADER dos_header = (PIMAGE_DOS_HEADER)imageBase;
-	return (PIMAGE_NT_HEADERS)((SIZE_T)imageBase + dos_header->e_lfanew);
+    PIMAGE_DOS_HEADER dos_header = (PIMAGE_DOS_HEADER)imageBase;
+    return (PIMAGE_NT_HEADERS)((SIZE_T)imageBase + dos_header->e_lfanew);
 }
 
 inline PIMAGE_OPTIONAL_HEADER GetOptionalHeader(HMODULE imageBase)
 {
-	return (PIMAGE_OPTIONAL_HEADER)((LPVOID)((SIZE_T)imageBase + ((PIMAGE_DOS_HEADER)(imageBase))->e_lfanew + sizeof(DWORD) + sizeof(IMAGE_FILE_HEADER)));
+    return (PIMAGE_OPTIONAL_HEADER)((LPVOID)((SIZE_T)imageBase + ((PIMAGE_DOS_HEADER)(imageBase))->e_lfanew + sizeof(DWORD) + sizeof(IMAGE_FILE_HEADER)));
 }
 
 //#define IMAGE_FIRST_SECTION(ntheader) ((PIMAGE_SECTION_HEADER) ((ULONG_PTR)ntheader + FIELD_OFFSET(IMAGE_NT_HEADERS,OptionalHeader) + ((PIMAGE_NT_HEADERS)(ntheader))->FileHeader.SizeOfOptionalHeader))
