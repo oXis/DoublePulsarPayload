@@ -97,10 +97,13 @@ FARPROC WINAPI GetExportAddress(HMODULE hMod, DWORD lpProcNameHash)
     }
     else {
         // by ordinal
-        if (lpProcNameHash >= pExportDirectory->NumberOfFunctions)
+        DWORD dwOrdinalBase = pExportDirectory->Base;
+        WORD ordinal = LOWORD(lpProcNameHash);
+
+        if (ordinal < dwOrdinalBase || ordinal >= dwOrdinalBase + pExportDirectory->NumberOfFunctions)
             return NULL;
 
-        pAddress = (FARPROC)(pBaseAddress + ((ULONG*)(pBaseAddress + pExportDirectory->AddressOfFunctions))[pOrdinals[lpProcNameHash]]);
+        pAddress = (FARPROC)(pBaseAddress + (DWORD_PTR)(pBaseAddress + pExportDirectory->AddressOfFunctions)[pOrdinals[ordinal - dwOrdinalBase]]);
     }
 
     // Forward?
