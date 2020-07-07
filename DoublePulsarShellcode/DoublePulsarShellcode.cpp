@@ -361,6 +361,9 @@ void shellcode(HMODULE module, ushort sizeShellcode, ushort sizeDllFile, byte or
     typeDllEntryProc dllEntryFunc;
     // Target PE and Entrypoint declare
     typemainCRTStartup PeEntryFunc;
+
+    typeCreateThread pCreateThread = (typeCreateThread)GetExportAddress(kernel32, hashCreateThread);
+    typeWaitForSingleObject pWaitForSingleObject = (typeWaitForSingleObject)GetExportAddress(kernel32, hashWaitForSingleObject);
     
     if (NTheader->OptionalHeader.AddressOfEntryPoint != 0)
     {
@@ -375,7 +378,8 @@ void shellcode(HMODULE module, ushort sizeShellcode, ushort sizeDllFile, byte or
                 typedef VOID(*TestFunction)();
                 TestFunction testFunc = (TestFunction)GetExportAddress(imageBase, ordToCall);
 
-                testFunc();
+                HANDLE hThread = pCreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)testFunc, 0, NULL, 0);
+			    pWaitForSingleObject(hThread, INFINITE);
             }
         }
         else
@@ -384,7 +388,12 @@ void shellcode(HMODULE module, ushort sizeShellcode, ushort sizeDllFile, byte or
             PeEntryFunc = (typemainCRTStartup)((SIZE_T)imageBase + (NTheader->OptionalHeader.AddressOfEntryPoint));
             if (PeEntryFunc)
             {
-                (*PeEntryFunc)();
+                HANDLE hThread = pCreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)PeEntryFunc, 0, NULL, 0);
+			
+			    // Wait for the loader to finish executing
+			    pWaitForSingleObject(hThread, INFINITE);
+
+			    //(*PeEntryFunc)();
             }
         }
     }

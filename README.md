@@ -32,6 +32,8 @@ Code of the shellcode. This is basically yet another reflective DLL loader. The 
 
 `map.txt` gives us the offset of the shellcode functions inside the PE file. It's used but `ExtractShellcode.exe`
 
+The shellcode can load any DLL or PE file. For loading a PE, the `main` function should end with `ExitThread` so that the shellcode can exit gracefully. Otherwise, a call to `exit`, `ExitProcess`, etc will break the shellcode and kill the current injected process.
+
 ## ExtractShellcode
 Open `MyMessageBox.dll` and `DoublePulsarShellcode.exe`. The DLL is LZO compressed. The code then dumps all the bytes in a header file.
 
