@@ -27,6 +27,8 @@ Furthermore, I wanted to add a bit a compression, and XOR obfuscation.
 
 I used Visual Studio 2019 Community on Windows 7.
 
+The shellcode can load mimikatz... (see bellow for graceful exit).
+
 ## DoublePulsarShellcode
 Code of the shellcode. This is basically yet another reflective DLL loader. The shellcode is XOR encrypted with a key, the compressed DLL is also XOR encrypted but with a different key.
 
