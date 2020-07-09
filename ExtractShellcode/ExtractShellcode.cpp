@@ -222,7 +222,7 @@ int main(int argc, const char* argv[])
 
     output_source << std::endl;
     output_source << "0x" << std::setw(2) << std::setfill('0')
-        << static_cast<unsigned long>(static_cast<unsigned char>(0 ^ KEY_SHELLCODE)) << ", ";
+        << static_cast<unsigned long>(static_cast<unsigned char>(1 ^ KEY_SHELLCODE)) << ", ";
     output_source << "// Ordinal to call";
 
     bin << (0 ^ KEY_SHELLCODE);
