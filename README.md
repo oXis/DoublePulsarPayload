@@ -1,6 +1,6 @@
 # Intro
 
-After reading the f-secure [blog post](https://blog.f-secure.com/doublepulsar-usermode-analysis-generic-reflective-dll-loader/) about DoublePulsar usermode shellcode, I wanted to reproduce it purely in C++. I am no way near to be a C++ guru or l33t hacker but I thought that would be a good exercice.
+After reading the f-secure [blog post](https://blog.f-secure.com/doublepulsar-usermode-analysis-generic-reflective-dll-loader/) about DoublePulsar usermode shellcode, I wanted to reproduce it purely in C++. I am no way near to be a C++ guru or l33t hacker but I thought that would be a good exercise.
 
 The blog breaks down the steps taken by the shellcode.
 
@@ -21,7 +21,7 @@ The blog breaks down the steps taken by the shellcode.
     15. The DLLs memory is freed.
     16. The shellcode then zeros out itself, except for the very end of the function, which allows the APC call to return gracefully.
 
-Furthermore, I wanted to add a bit a compression, and XOR obfuscation.
+Furthermore, I wanted to add a bit of compression, and XOR obfuscation.
 
 # DoublePulsarPayload
 
