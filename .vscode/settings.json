@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "config1z.h": "c",
+        "config1x.h": "c"
+    },
+    "go.toolsEnvVars": {
+        "GO111MODULE":"off"
+    }
+}

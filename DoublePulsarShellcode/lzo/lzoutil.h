@@ -1,4 +1,4 @@
-/* lzo1z_d1.c -- LZO1Z decompression
+/* lzoutil.h -- utility functions for use by applications
 
    This file is part of the LZO real-time data compression library.
 
@@ -26,11 +26,37 @@
  */
 
 
-#include "config1z.h"
+#ifndef __LZOUTIL_H_INCLUDED
+#define __LZOUTIL_H_INCLUDED 1
 
-#undef LZO_TEST_OVERRUN
-#define DO_DECOMPRESS       lzo1z_decompress
+#ifndef __LZOCONF_H_INCLUDED
+#include <lzo/lzoconf.h>
+#endif
 
-#include "lzo1x_d.ch"
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+/***********************************************************************
+// LZO-v1 deprecated macros (which were used in the old example programs)
+//
+// THIS FILE IS DEPRECATED. DO NOT USE.
+************************************************************************/
+
+#define lzo_alloc(a,b)      (malloc((a)*(b)))
+#define lzo_malloc(a)       (malloc(a))
+#define lzo_free(a)         (free(a))
+
+#define lzo_fread(f,b,s)    (fread(b,1,s,f))
+#define lzo_fwrite(f,b,s)   (fwrite(b,1,s,f))
+
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
+
+#endif /* already included */
+
 
 /* vim:set ts=4 sw=4 et: */

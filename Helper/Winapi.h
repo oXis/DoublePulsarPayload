@@ -1,7 +1,7 @@
 #pragma once
 
 #define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
+#include <windows.h>
 #include <winternl.h>
 #include <malloc.h>
 
@@ -47,24 +47,24 @@ typedef HANDLE (WINAPI* typeCreateRemoteThread)(HANDLE hProcess, LPSECURITY_ATTR
 typedef DWORD (WINAPI* typeWaitForSingleObject)(HANDLE hHandle, DWORD  dwMilliseconds);
 
 
-inline BOOL IsOrdinal(UINT_PTR pvTest)
+__attribute__((always_inline)) inline BOOL IsOrdinal(UINT_PTR pvTest)
 {
     CONST UINT_PTR MASK = ~(UINT_PTR(0xFFFF));
     return (pvTest & MASK) == 0 ? TRUE : FALSE;
 }
 
-inline PPEB GetPEB()
+__attribute__((always_inline)) inline PPEB GetPEB()
 {
     return NtCurrentTeb()->ProcessEnvironmentBlock;
 }
 
-inline PIMAGE_NT_HEADERS GetNTHeaders(HMODULE imageBase)
+__attribute__((always_inline)) inline PIMAGE_NT_HEADERS GetNTHeaders(HMODULE imageBase)
 {
     PIMAGE_DOS_HEADER dos_header = (PIMAGE_DOS_HEADER)imageBase;
     return (PIMAGE_NT_HEADERS)((SIZE_T)imageBase + dos_header->e_lfanew);
 }
 
-inline PIMAGE_OPTIONAL_HEADER GetOptionalHeader(HMODULE imageBase)
+__attribute__((always_inline)) inline PIMAGE_OPTIONAL_HEADER GetOptionalHeader(HMODULE imageBase)
 {
     return (PIMAGE_OPTIONAL_HEADER)((LPVOID)((SIZE_T)imageBase + ((PIMAGE_DOS_HEADER)(imageBase))->e_lfanew + sizeof(DWORD) + sizeof(IMAGE_FILE_HEADER)));
 }

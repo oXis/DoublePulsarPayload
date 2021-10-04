@@ -1,4 +1,4 @@
-#include <Windows.h>
+#include <windows.h>
 
 extern "C" VOID __declspec(dllexport) TestFunction0();
 extern "C" VOID __declspec(dllexport) TestFunction1();

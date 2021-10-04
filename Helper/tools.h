@@ -1,5 +1,5 @@
 #pragma once
-#include <Windows.h>
+#include <windows.h>
 
 #define KEY_SHELLCODE 0x05
 #define KEY_DLL 0x12
@@ -12,9 +12,17 @@ typedef unsigned char byte;
 typedef unsigned short ushort;
 typedef unsigned int uint;
 
-__inline DWORD getHash(const char* str);
+__attribute__((always_inline)) __inline__ DWORD getHash(const char* str) {
+    DWORD h = 0;
+    while (*str) {
+        h = (h >> 13) | (h << (32 - 13));       // ROR h, 13
+        h += *str >= 'a' ? *str - 32 : *str;    // convert the character to uppercase
+        str++;
+    }
+    return h;
+}
 
-__inline void* mmemcpy(void* dst, const void* src, int size)
+__attribute__((always_inline)) __inline__ void* mmemcpy(void* dst, const void* src, int size)
 {
     if (dst && src && size > 0)
     {
@@ -25,7 +33,7 @@ __inline void* mmemcpy(void* dst, const void* src, int size)
     return dst;
 }
 
-__inline void* mmemset(void* ptr, int c, int count)
+__attribute__((always_inline)) __inline__ void* mmemset(void* ptr, int c, int count)
 {
     if (ptr && count > 0)
     {

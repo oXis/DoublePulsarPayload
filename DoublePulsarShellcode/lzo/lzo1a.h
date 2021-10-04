@@ -1,4 +1,4 @@
-/* config1x.h -- configuration for the LZO1X algorithm
+/* lzo1a.h -- public interface of the LZO1A compression algorithm
 
    This file is part of the LZO real-time data compression library.
 
@@ -26,79 +26,57 @@
  */
 
 
-/* WARNING: this file should *not* be used by applications. It is
-   part of the implementation of the library and is subject
-   to change.
+#ifndef __LZO1A_H_INCLUDED
+#define __LZO1A_H_INCLUDED 1
+
+#ifndef __LZOCONF_H_INCLUDED
+#include <lzo/lzoconf.h>
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+/***********************************************************************
+//
+************************************************************************/
+
+/* Memory required for the wrkmem parameter.
+ * When the required size is 0, you can also pass a NULL pointer.
  */
 
-
-#ifndef __LZO_CONFIG1X_H
-#define __LZO_CONFIG1X_H 1
-
-#if !defined(LZO1X) && !defined(LZO1Y) && !defined(LZO1Z)
-#  define LZO1X 1
-#endif
-
-#include "lzo_conf.h"
-#if !defined(__LZO_IN_MINILZO)
-#include <lzo/lzo1x.h>
-#endif
+#define LZO1A_MEM_COMPRESS      ((lzo_uint32_t) (8192L * lzo_sizeof_dict_t))
+#define LZO1A_MEM_DECOMPRESS    (0)
 
 
-/***********************************************************************
-//
-************************************************************************/
+LZO_EXTERN(int)
+lzo1a_compress          ( const lzo_bytep src, lzo_uint  src_len,
+                                lzo_bytep dst, lzo_uintp dst_len,
+                                lzo_voidp wrkmem );
 
-#ifndef LZO_EOF_CODE
-#define LZO_EOF_CODE 1
-#endif
-#undef LZO_DETERMINISTIC
-
-#define M1_MAX_OFFSET   0x0400
-#ifndef M2_MAX_OFFSET
-#define M2_MAX_OFFSET   0x0800
-#endif
-#define M3_MAX_OFFSET   0x4000
-#define M4_MAX_OFFSET   0xbfff
-
-#define MX_MAX_OFFSET   (M1_MAX_OFFSET + M2_MAX_OFFSET)
-
-#define M1_MIN_LEN      2
-#define M1_MAX_LEN      2
-#define M2_MIN_LEN      3
-#ifndef M2_MAX_LEN
-#define M2_MAX_LEN      8
-#endif
-#define M3_MIN_LEN      3
-#define M3_MAX_LEN      33
-#define M4_MIN_LEN      3
-#define M4_MAX_LEN      9
-
-#define M1_MARKER       0
-#define M2_MARKER       64
-#define M3_MARKER       32
-#define M4_MARKER       16
+LZO_EXTERN(int)
+lzo1a_decompress        ( const lzo_bytep src, lzo_uint  src_len,
+                                lzo_bytep dst, lzo_uintp dst_len,
+                                lzo_voidp wrkmem /* NOT USED */ );
 
 
 /***********************************************************************
-//
+// better compression ratio at the cost of more memory and time
 ************************************************************************/
 
-#ifndef MIN_LOOKAHEAD
-#define MIN_LOOKAHEAD       (M2_MAX_LEN + 1)
+#define LZO1A_99_MEM_COMPRESS   ((lzo_uint32_t) (65536L * lzo_sizeof_dict_t))
+
+LZO_EXTERN(int)
+lzo1a_99_compress       ( const lzo_bytep src, lzo_uint  src_len,
+                                lzo_bytep dst, lzo_uintp dst_len,
+                                lzo_voidp wrkmem );
+
+
+
+#ifdef __cplusplus
+} /* extern "C" */
 #endif
-
-#if defined(LZO_NEED_DICT_H)
-
-#ifndef LZO_HASH
-#define LZO_HASH            LZO_HASH_LZO_INCREMENTAL_B
-#endif
-#define DL_MIN_LEN          M2_MIN_LEN
-#include "lzo_dict.h"
-
-#endif
-
-
 
 #endif /* already included */
 

@@ -25,19 +25,19 @@ Furthermore, I wanted to add a bit a compression, and XOR obfuscation.
 
 # DoublePulsarPayload
 
-I used Visual Studio 2019 Community on Windows 7.
+~~I used Visual Studio 2019 Community on Windows 7.~~    
+Migrated to mingw toolchain and Go.
+Every tool now has a `Makefile`, just run `make` to build the tool.
 
 The shellcode can load mimikatz... (see bellow for graceful exit).
 
 ## DoublePulsarShellcode
-Code of the shellcode. This is basically yet another reflective DLL loader. The shellcode is XOR encrypted with a key, the compressed DLL is also XOR encrypted but with a different key.
+Code of the shellcode. This is basically yet another PE+ loader. The shellcode is XOR encrypted with a key, the compressed DLL is also XOR encrypted but with a different key.
 
-`map.txt` gives us the offset of the shellcode functions inside the PE file. It's used but `ExtractShellcode.exe`
-
-The shellcode can load any DLL or PE file. For loading a PE, the `main` function should end with `ExitThread` so that the shellcode can exit gracefully. Otherwise, a call to `exit`, `ExitProcess`, etc will break the shellcode and kill the current injected process. I can't patch all of the diffent exit methods...
+The shellcode can load any DLL or PE file. For loading a PE, the `main` function should end with `ExitThread` so that the shellcode can exit gracefully. Otherwise, a call to `exit`, `ExitProcess`, etc will break the shellcode and kill the current injected process. I can't patch all of the different exit methods (actually I can... thanks to Donut)...
 
 ## ExtractShellcode
-Open `MyMessageBox.dll` and `DoublePulsarShellcode.exe`. The DLL is LZO compressed. The code then dumps all the bytes in a header file.
+Opens `MyMessageBox.dll` and `DoublePulsarShellcode.exe`. The DLL is LZO compressed. The code then dumps all the bytes in a header file.
 
 The shellcode is organisze that way.
 ```
@@ -69,16 +69,12 @@ The shellcode is organisze that way.
 
 At the end of execution, the shellcode Free and Zero the loaded DLL, the compressed DLL and also it's own memory up to a certain offset to allow graceful return.
 
-ExtractShellcode requires `lzo.lib`, so grab a copy of LZO and compile it. Then change
-`#include "../../lzo-2.06/include/lzo/lzo1z.h"` and `#pragma comment(lib, "../Release/lzo-2.06.lib")`
-to the correct location.
+ExtractShellcode requires `lzo.a`, so grab a copy of LZO and compile it. Then copy `liblzo2.a` from `lzo-2.10/src/.libs` and put it into `ExtractShellcode/`
 
-Got to [www.oberhumer.com/opensource/lzo/download](https://www.oberhumer.com/opensource/lzo/download/) or click [LZO 2.06 download](https://www.oberhumer.com/opensource/lzo/download/lzo-2.06.tar.gz)
+Got to [www.oberhumer.com/opensource/lzo/download](https://www.oberhumer.com/opensource/lzo/download/) or click [LZO 2.10 download](https://www.oberhumer.com/opensource/lzo/download/lzo-2.10.tar.gz)
 
 Run this command to extract the shellcode.    
-`.\ExtractShellcode.exe ..\..\DoublePulsarShellcode\map.txt ..\..\RunShellcode\shellcode.h`
-
-`shellcode.bin` contains raw shellcode bytes.
+`./ExtractShellcode -bin ../MyMessageBox/MyMessageBox.dll -shellcode ../DoublePulsarShellcode/shellcode.bin -ord 1`
 
 ## Helper
 Contains headers for the shellcode and also print hash of WinAPI functions
