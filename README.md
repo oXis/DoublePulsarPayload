@@ -1,3 +1,5 @@
+# CHECKOUT BRANCH MINGW, HUGE UPDATE. YOU CAN NOW COMPILE EVERYTHING ON LINUX. BUILDER IS NOW IN GOLANG.
+
 # Intro
 
 After reading the f-secure [blog post](https://blog.f-secure.com/doublepulsar-usermode-analysis-generic-reflective-dll-loader/) about DoublePulsar usermode shellcode, I wanted to reproduce it purely in C++. I am no way near to be a C++ guru or l33t hacker but I thought that would be a good exercice.
