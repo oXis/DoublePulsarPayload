@@ -24,7 +24,7 @@ func init() {
 	flag.StringVar(&name, "bin", "", "exe/dll to transform into shellcode")
 
 	var shellcode string
-	flag.StringVar(&shellcode, "shellcode", "", "exe/dll to transform into shellcode")
+	flag.StringVar(&shellcode, "shellcode", "", "Shellcode location")
 
 	var ordToCall int64
 	flag.Int64Var(&ordToCall, "ord", 1, "ordinal to call")

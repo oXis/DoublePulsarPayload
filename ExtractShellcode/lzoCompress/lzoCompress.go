@@ -1,8 +1,8 @@
 package lzoCompress
 
 /*
-#cgo CFLAGS: -I../lzo-2.10/include/
-#cgo LDFLAGS: -L./ -llzo2 -Wl,-rpath=./
+#cgo CFLAGS: -I../../lzo-2.10/include/
+#cgo LDFLAGS: -L../ -llzo2 -Wl,-rpath=./
 #include "lzo/lzoconf.h"
 #include "lzo/lzo1z.h"
 
