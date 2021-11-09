@@ -395,6 +395,7 @@ void shellcode(HMODULE module, ushort sizeShellcode, ushort sizeDllFile, byte or
     }
 
     // Get Exception directory
+    directory = &NTheader->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXCEPTION];
     PIMAGE_RUNTIME_FUNCTION_ENTRY ExceptionDirectory = (PIMAGE_RUNTIME_FUNCTION_ENTRY)((SIZE_T)imageBase + directory->VirtualAddress);
 
     // Add exceptions
